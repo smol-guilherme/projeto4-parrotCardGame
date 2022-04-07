@@ -1,29 +1,53 @@
+let counter = 0;
+let timer = 0;
+let min = 0;
+
 function main() {
+    initializeTimer();
     initializeGame();
 }
 
 main();
 
 function initializeGame() {
-    let input;
+    counter = 0;
+    timer = 0;
+    min = 0;
+    let input = 0;
     do {
         input = prompt("Escolha um número par de cartas: \n(Min: 4, Max: 14)");
         input = Number(input)
     } while (input < 4 || input % 2 !== 0 || input > 14)
     pickDeck(input); 
-    // restartGame();
+}
+
+function initializeTimer() {
+    const pageTop = document.querySelector("main")
+    pageTop.innerHTML =
+    `
+    <span class="timer"></span>
+    <h1 class="game-title">Parrot Card Game</h1>
+    `
 }
 
 function restartGame() {
-    let input;
-
+    const currentGame = document.querySelectorAll(".card-element");
+    let input = "";
+    const confirm = "sim"
+    const deny = "não"
     do {
-        input  = prompt("Gostaria de jogar novamente? (sim / não)");
-        if (input === "sim") {
-            initializeGame();
+        input = prompt("Gostaria de jogar novamente? (sim / não)");
+        input = input.toLowerCase();
+        input.replace(" ", "")
+    } while(input !== deny && input !== confirm)
+    
+    if (input === "sim") {
+        for(let i = 0; i < currentGame.length; i++) {
+            currentGame[i].remove()
         }
-    } while (input !== "não")
-    endGame();
+        initializeGame();
+    } else
+        endGame();
 }
 
 function endGame() {
@@ -51,18 +75,37 @@ function shuffle() {
 }
 
 function flipCard(card) {
-    card.querySelector(".card-front").classList.toggle("hidden")
-    card.querySelector(".card-back").classList.toggle("hidden")
-    setTimeout(() => {
-        console.log("timeout started")
-        card.querySelector(".card-front.hidden").classList.remove("hidden")
-        card.querySelector(".card-back").classList.add("hidden")    
-    }, 1000);
+    counter++;
+    card.classList.add("selected")
+    card.querySelector(".card-front").classList.add("flip-front")
+    card.querySelector(".card-back").classList.add("flip-back")
+    const checkPair = card.parentNode.querySelectorAll(".selected")
+    if(checkPair.length === 2) {
+        if(checkPair[0].querySelector(".card-back img").src === checkPair[1].querySelector(".card-back img").src) {
+            checkPair[0].classList.remove("playable")
+            checkPair[1].classList.remove("playable")
+            checkPair[0].classList.remove("selected")
+            checkPair[1].classList.remove("selected")
+            checkPair[0].removeAttribute("onclick")
+            checkPair[1].removeAttribute("onclick")
+            console.log("you got one!")
+        } else {
+            console.log("b4 unflipe")
+            setTimeout(unflipCard, 1000)
+        }
+    }
+    setTimeout(gameOver, 50)
 }
 
-function unflipCard(card) {
-    card.querySelector(".card-front").classList.toggle("hidden")
-    card.querySelector(".card-back").classList.toggle("hidden")
+function unflipCard() {
+    console.log("unflipe")
+    const selPair = document.querySelectorAll(".selected.playable")
+    for(let i = 0; i < selPair.length; i++)
+    {
+        selPair[i].querySelector(".card-front").classList.remove("flip-front")
+        selPair[i].querySelector(".card-back").classList.remove("flip-back")
+        selPair[i].classList.remove("selected")
+    }
 }
 
 function dealCards(deck) {
@@ -71,26 +114,39 @@ function dealCards(deck) {
     for(i = 0; i < deck.length; i++) {
         board.innerHTML +=
         `
-        <div onclick="flipCard(this)" class="card-element">
-            <img class="card-front" src="./images/gui/front.png" alt="">
-            <img class="card-back hidden" src="./images/content/0${deck[i]}_parrot.gif" alt="">
+        <div onclick="flipCard(this)" class="card-element playable">
+            <div class="card-front card-face">
+                <img src="./images/gui/front.png" alt="">
+            </div>
+            <div class="card-back card-face">
+                <img src="./images/content/0${deck[i]}_parrot.gif" alt="">
+            </div>
         </div>
         `
-        // let card = document.createElement("div");
-        // let imgFront = document.createElement("img");
-        // let imgBack = document.createElement("img");
-        // card = board.appendChild(card);
-        // card.classList.add("card-element");
-        // card.setAttribute("onclick", "flipCard(this)");
-        // card.appendChild(imgFront);
-        // imgFront.classList.add("card-front");
-        // imgFront.classList.add("card-front", "hidden");
-        // imgFront.setAttribute("src", "./images/gui/front.png")
-
-        // card.appendChild(imgBack);
-        // imgBack.classList.add("card-back", "hidden");
-        // imgBack.classList.add("card-back");
-        // imgBack.setAttribute("src", `./images/content/0${deck[i]}_parrot.gif`)
     }
-    playGame();
+    setInterval(gameTimer, 1000)
 }
+
+function gameTimer() {
+
+    timer++
+    const sec = timer % 60;
+    if (sec % 60 === 0)
+        min++;
+    const clock = document.querySelector(".timer");
+    if(sec < 10)
+        clock.innerHTML = `${min}:0${sec}`
+    else
+        clock.innerHTML = `${min}:${sec}`
+
+}
+
+function gameOver() {
+    const cardsLeft = document.querySelectorAll(".playable")
+    if(cardsLeft.length === 0) {
+        alert(`Parabéns, você ganhou após ${counter} jogadas`)
+        clearInterval(gameTimer);
+        restartGame();
+    }
+}
+
