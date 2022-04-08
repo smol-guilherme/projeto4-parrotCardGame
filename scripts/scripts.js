@@ -3,14 +3,8 @@ let timer = 0;
 let min = 0;
 let id;
 
-function main() {
-    initializeTimer();
-    initializeGame();
-}
-
-main();
-
 function initializeGame() {
+    initializeTimer();
     counter = 0;
     timer = 0;
     min = 0;
@@ -37,7 +31,7 @@ function restartGame() {
     const confirm = "sim"
     const deny = "não"
     do {
-        input = prompt("Gostaria de jogar novamente? (sim / não)");
+        input = prompt("Gostaria de jogar novamente? (sim / não)", "sim");
         input = input.toLowerCase();
         input.replace(" ", "")
     } while(input !== deny && input !== confirm)
@@ -49,11 +43,6 @@ function restartGame() {
         initializeGame();
     } else
         endGame();
-}
-
-function endGame() {
-    alert("Obrigado por jogar o magnífico e modesto Parrot Card Game");
-    return 0;
 }
 
 function pickDeck(deck) {
@@ -69,54 +58,6 @@ function pickDeck(deck) {
         }
     }
     dealCards(deckArray);
-}   
-
-function shuffle() {
-    return Math.random() - 0.5;
-}
-
-function flipCard(card) {
-    counter++;
-    card.classList.add("selected")
-    card.querySelector(".card-front").classList.add("flip-front")
-    card.querySelector(".card-back").classList.add("flip-back")
-    const checkPair = card.parentNode.querySelectorAll(".selected")
-    if(checkPair.length === 2) {
-        lockToggle()
-        if(checkPair[0].querySelector(".card-back img").src === checkPair[1].querySelector(".card-back img").src) {
-            checkPair[0].classList.remove("playable")
-            checkPair[1].classList.remove("playable")
-            checkPair[0].classList.remove("selected")
-            checkPair[1].classList.remove("selected")
-            checkPair[0].removeAttribute("onclick")
-            checkPair[1].removeAttribute("onclick")
-            console.log("you got one!")
-        } else {
-            setTimeout(unflipCard, 1000)
-        }
-        setTimeout(lockToggle, 330)
-    }
-    setTimeout(gameOver, 50)
-}
-
-function lockToggle() {
-    const lockArr = document.querySelectorAll(".playable")
-    for (i = 0; i < lockArr.length; i++) {
-        if(lockArr[i].hasAttribute("onclick"))
-            lockArr[i].removeAttribute("onclick")
-        else
-            lockArr[i].setAttribute("onclick", "flipCard(this)")
-    }
-}
-
-function unflipCard() {
-    const selPair = document.querySelectorAll(".selected.playable")
-    for(let i = 0; i < selPair.length; i++)
-    {
-        selPair[i].querySelector(".card-front").classList.remove("flip-front")
-        selPair[i].querySelector(".card-back").classList.remove("flip-back")
-        selPair[i].classList.remove("selected")
-    }
 }
 
 function dealCards(deck) {
@@ -135,7 +76,58 @@ function dealCards(deck) {
         </div>
         `
     }
+    const cards = board.querySelectorAll(".playable");
+    cards.forEach(unlockCards)
     id = setInterval(gameTimer, 1000)
+}
+
+function shuffle() {
+    return Math.random() - 0.5;
+}
+
+function flipCard(card) {
+    counter++;
+    card.classList.add("selected")
+    card.querySelector(".card-front").classList.add("flip-front")
+    card.querySelector(".card-back").classList.add("flip-back")
+    const checkPair = card.parentNode.querySelectorAll(".selected")
+    const deck = document.querySelectorAll(".playable")
+    if(checkPair.length === 2) {
+        deck.forEach(lockCards)
+        if(checkPair[0].querySelector(".card-back img").src === checkPair[1].querySelector(".card-back img").src) {
+            checkPair.forEach(removeFromGame)
+        } else {
+            setTimeout(unflipCard, 1000)
+        }
+    }
+    setTimeout(unlockCards, 1330)
+    setTimeout(gameOver, 50)
+}
+
+function removeFromGame(card) {
+    card.classList.remove("playable", "selected")
+    card.removeAttribute("onclick")
+}
+
+function lockCards(card) {
+    card.removeAttribute("onclick")
+}
+
+function unlockCards() {
+    const deck = document.querySelectorAll(".playable")
+    deck.forEach((card) => {
+        card.setAttribute("onclick", "flipCard(this)")
+    })
+}
+
+function unflipCard() {
+    const selPair = document.querySelectorAll(".selected.playable")
+    for(let i = 0; i < selPair.length; i++)
+    {
+        selPair[i].querySelector(".card-front").classList.remove("flip-front")
+        selPair[i].querySelector(".card-back").classList.remove("flip-back")
+        selPair[i].classList.remove("selected")
+    }
 }
 
 function gameTimer() {
@@ -162,3 +154,13 @@ function gameOver() {
     }
 }
 
+function endGame() {
+    alert("Obrigado por jogar o magnífico e modesto Parrot Card Game");
+    return 0;
+}
+
+function main() {
+    initializeGame();
+}
+
+main();
