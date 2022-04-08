@@ -82,6 +82,7 @@ function flipCard(card) {
     card.querySelector(".card-back").classList.add("flip-back")
     const checkPair = card.parentNode.querySelectorAll(".selected")
     if(checkPair.length === 2) {
+        lockToggle()
         if(checkPair[0].querySelector(".card-back img").src === checkPair[1].querySelector(".card-back img").src) {
             checkPair[0].classList.remove("playable")
             checkPair[1].classList.remove("playable")
@@ -91,15 +92,24 @@ function flipCard(card) {
             checkPair[1].removeAttribute("onclick")
             console.log("you got one!")
         } else {
-            console.log("b4 unflipe")
             setTimeout(unflipCard, 1000)
         }
+        setTimeout(lockToggle, 330)
     }
     setTimeout(gameOver, 50)
 }
 
+function lockToggle() {
+    const lockArr = document.querySelectorAll(".playable")
+    for (i = 0; i < lockArr.length; i++) {
+        if(lockArr[i].hasAttribute("onclick"))
+            lockArr[i].removeAttribute("onclick")
+        else
+            lockArr[i].setAttribute("onclick", "flipCard(this)")
+    }
+}
+
 function unflipCard() {
-    console.log("unflipe")
     const selPair = document.querySelectorAll(".selected.playable")
     for(let i = 0; i < selPair.length; i++)
     {
