@@ -1,6 +1,7 @@
 let counter = 0;
 let timer = 0;
 let min = 0;
+let id;
 
 function main() {
     initializeTimer();
@@ -25,8 +26,8 @@ function initializeTimer() {
     const pageTop = document.querySelector("main")
     pageTop.innerHTML =
     `
-    <span class="timer"></span>
-    <h1 class="game-title">Parrot Card Game</h1>
+    <span class="timer">0:00</span>
+    <h1 class="game-title">PARROT CARD GAME</h1>
     `
 }
 
@@ -124,11 +125,10 @@ function dealCards(deck) {
         </div>
         `
     }
-    setInterval(gameTimer, 1000)
+    id = setInterval(gameTimer, 1000)
 }
 
 function gameTimer() {
-
     timer++
     const sec = timer % 60;
     if (sec % 60 === 0)
@@ -138,14 +138,16 @@ function gameTimer() {
         clock.innerHTML = `${min}:0${sec}`
     else
         clock.innerHTML = `${min}:${sec}`
-
 }
 
 function gameOver() {
     const cardsLeft = document.querySelectorAll(".playable")
+    let sec = timer % 60
+    if(sec < 10)
+        sec = `0${sec}`
     if(cardsLeft.length === 0) {
-        alert(`Parabéns, você ganhou após ${counter} jogadas`)
-        clearInterval(gameTimer);
+        alert(`Parabéns, você ganhou após ${counter} jogadas\nSeu tempo: ${min}:${sec}`)
+        clearInterval(id);
         restartGame();
     }
 }

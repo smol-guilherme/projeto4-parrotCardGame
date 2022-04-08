@@ -1,5 +1,7 @@
+@import url('https://fonts.googleapis.com/css2?family=Roboto:wght@100;300;400;500;700&display=swap');
 
 body {
+    font-family: 'Roboto', sans-serif;
     background-color: #EEF9BF;
     text-align: center;
 }
@@ -13,7 +15,9 @@ main {
 }
 
 .game-title {
-    font-size: 48px;
+    margin: 20px 0;
+    font-size: 56px;
+    font-weight: bold;
     color: #75B79E;
     width: 100%;
 }
@@ -70,7 +74,7 @@ main {
 }
 
 .playable {
-    cursor: grab;
+    cursor: pointer;
 }
 
 .card-element img {
@@ -78,7 +82,25 @@ main {
 }
 
 .timer {
+    display: inline-block;
+    padding: 4px;
+    width: 80px;
+    font-size: 20px;
+    font-weight: 500;
+    border: 6px double #75B79E;
+    border-radius: 8px;
     position: fixed;
     top: 2%;
-    left: 2%;
+    right: 2%;
+}
+
+@media (max-width: 415px) {
+    .timer {
+        font-size: 16px;
+        width: 50px;
+    }
+
+    .game-title {
+        font-size: 36px;
+    }
 }
