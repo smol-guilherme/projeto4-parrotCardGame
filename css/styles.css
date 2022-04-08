@@ -43,6 +43,7 @@ main {
     align-items: center;
     justify-content: center;
     position: absolute;
+    -webkit-backface-visibility: hidden;
     backface-visibility: hidden;
     transition: all 330ms;
     transform-style: preserve-3d;

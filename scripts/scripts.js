@@ -3,6 +3,9 @@ let timer = 0;
 let min = 0;
 let id;
 
+const DELAY = 1000;
+const FLIP_ANIM_TIME = 330;
+
 function initializeGame() {
     initializeTimer();
     counter = 0;
@@ -78,7 +81,7 @@ function dealCards(deck) {
     }
     const cards = board.querySelectorAll(".playable");
     cards.forEach(unlockCards)
-    id = setInterval(gameTimer, 1000)
+    id = setInterval(gameTimer, DELAY)
 }
 
 function shuffle() {
@@ -97,10 +100,10 @@ function flipCard(card) {
         if(checkPair[0].querySelector(".card-back img").src === checkPair[1].querySelector(".card-back img").src) {
             checkPair.forEach(removeFromGame)
         } else {
-            setTimeout(unflipCard, 1000)
+            setTimeout(unflipCard, DELAY)
         }
     }
-    setTimeout(unlockCards, 1330)
+    setTimeout(unlockCards, DELAY+FLIP_ANIM_TIME)
     setTimeout(gameOver, 50)
 }
 
