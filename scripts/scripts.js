@@ -93,17 +93,19 @@ function flipCard(card) {
     card.classList.add("selected")
     card.querySelector(".card-front").classList.add("flip-front")
     card.querySelector(".card-back").classList.add("flip-back")
+    lockCards(card)
     const checkPair = card.parentNode.querySelectorAll(".selected")
     const deck = document.querySelectorAll(".playable")
     if(checkPair.length === 2) {
         deck.forEach(lockCards)
         if(checkPair[0].querySelector(".card-back img").src === checkPair[1].querySelector(".card-back img").src) {
             checkPair.forEach(removeFromGame)
+            setTimeout(unlockCards, FLIP_ANIM_TIME)
         } else {
             setTimeout(unflipCard, DELAY)
+            setTimeout(unlockCards, DELAY+FLIP_ANIM_TIME)
         }
     }
-    setTimeout(unlockCards, DELAY+FLIP_ANIM_TIME)
     setTimeout(gameOver, 50)
 }
 

@@ -30,7 +30,7 @@ main {
     width: 80px;
     height: 110px;
     position: relative;
-    margin: 5px;
+    margin: 5%;
     box-sizing: border-box;
 }
 
@@ -93,6 +93,12 @@ main {
     position: fixed;
     top: 2%;
     right: 2%;
+}
+
+.piled-cards {
+    position: fixed;
+    top: 2%;
+    left: 2%;
 }
 
 @media (max-width: 415px) {
