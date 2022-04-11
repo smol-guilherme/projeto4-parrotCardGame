@@ -45,6 +45,7 @@ main {
     display: flex;
     align-items: center;
     justify-content: center;
+    box-shadow: 2px 2px 2px 2px gray;
     position: absolute;
     -webkit-backface-visibility: hidden;
     backface-visibility: hidden;
@@ -96,12 +97,6 @@ main {
     position: fixed;
     top: 2%;
     right: 2%;
-}
-
-.piled-cards {
-    position: fixed;
-    top: 2%;
-    left: 2%;
 }
 
 @media (max-width: 415px) {
