@@ -4,6 +4,9 @@ body {
     font-family: 'Roboto', sans-serif;
     background-color: #EEF9BF;
     text-align: center;
+    user-select: none;
+    -webkit-user-select: none;
+    -moz-user-select: none;
 }
 
 main {
